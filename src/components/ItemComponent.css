@@ -1,0 +1,36 @@
+/* ItemComponent.css */
+
+.card {
+  background-color: #161616;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  display: flex;
+  list-style-type: none; /* Remove dot */
+  padding: 10px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column; /* Arrange fields in a column */
+  flex: 1;
+}
+
+.card-field {
+  margin-bottom: 5px;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.card-buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center
+
+}
+
+.card-buttons button {
+  margin-right: 5px;
+}
