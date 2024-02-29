@@ -3,7 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import ItemList from "./components/ItemList";
-import CreateItem from "./components/CreateItem";
+
 
 function App() {
   return (
@@ -18,7 +18,7 @@ function App() {
       </div>
 
       <div className="card">
-        <CreateItem/>
+      
         <ItemList />
       </div>
       <p className="read-the-docs">

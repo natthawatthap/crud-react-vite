@@ -1,38 +1,36 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Item } from "../models/Item"; // Import the Item interface
+import { Item } from "../models/Item";
 
-interface CreateItemProps {
-  onItemCreated: () => void;
+interface EditItemProps {
+  item: Item; // Item to be edited
+  onUpdate: () => void; // Function to call after item is updated
+  onCancel: () => void; // Function to call when editing is canceled
 }
 
-
-const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
-  const [price, setPrice] = useState<number>(0);
+const EditItem: React.FC<EditItemProps> = ({ item, onUpdate, onCancel }) => {
+  const [name, setName] = useState<string>(item.name);
+  const [description, setDescription] = useState<string>(item.description);
+  const [price, setPrice] = useState<number>(item.price);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
     try {
-      const newItem: Item = {
-        _id: "",
+      const updatedItem: Item = {
+        ...item,
         name,
         description,
         price,
       };
-      await axios.post<Item>("http://localhost:8000/v1/items/", newItem);
-      // Reset form fields after successful submission
-      onItemCreated();
-      setName("");
-      setDescription("");
-      setPrice(0);
-      alert("Item created successfully!");
+      await axios.put<Item>(`http://localhost:8000/v1/items/${item._id}`, updatedItem);
+      onUpdate(); // Call the function to refetch items
+      alert("Item updated successfully!");
     } catch (error) {
-      console.error("Error creating item:", error);
-      alert("An error occurred while creating the item.");
+      console.error("Error updating item:", error);
+      setError("An error occurred while updating the item.");
     } finally {
       setLoading(false);
     }
@@ -40,7 +38,8 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
 
   return (
     <div>
-      <h2>Create Item</h2>
+      <h3>Edit Item</h3>
+      {error && <div>{error}</div>}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name:</label>
@@ -73,11 +72,12 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
           />
         </div>
         <button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create"}
+          {loading ? "Updating..." : "Update"}
         </button>
+        <button type="button" onClick={onCancel}>Cancel</button>
       </form>
     </div>
   );
 };
 
-export default CreateItem;
+export default EditItem;
