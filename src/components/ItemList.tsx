@@ -3,9 +3,9 @@ import axios, { AxiosResponse } from "axios";
 import { Item } from "../models/Item";
 import { ItemListResponse } from "../models/ItemListResponse";
 import Pagination from "./Pagination";
+import ItemComponent from "./ItemComponent";
 import CreateItem from "../components/CreateItem";
 import EditItem from "./EditItem";
-import DeleteItem from "./DeleteItem"; // Import the DeleteItem component
 
 const ItemList: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -13,31 +13,31 @@ const ItemList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
   const perPage = 2;
-  const [editingItem, setEditingItem] = useState<Item | null>(null); // Track the item being edited
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
 
   useEffect(() => {
-    fetchItems(); // Fetch items when component mounts or currentPage changes
+    fetchItems();
   }, [currentPage]);
 
   const fetchItems = async () => {
     try {
-      setLoading(true); // Set loading state to true when fetching items
+      setLoading(true);
       const response: AxiosResponse<ItemListResponse> = await axios.get(
         "http://localhost:8000/v1/items",
         {
           params: { page: currentPage, per_page: perPage },
         }
       );
-      console.log(response.data);
       const { items, pagination } = response.data;
       setItems(items);
-      setTotalPages(pagination.total_pages); // Calculate total pages
+      setTotalPages(pagination.total_pages);
       setTotalItems(pagination.total_items);
     } catch (error) {
       console.error("Error fetching items:", error);
     } finally {
-      setLoading(false); // Set loading state to false after fetching items
+      setLoading(false);
     }
   };
 
@@ -50,59 +50,77 @@ const ItemList: React.FC = () => {
   };
 
   const handleEditItem = (item: Item) => {
-    setEditingItem(item); // Set the item to be edited
+    setEditingItem(item);
   };
 
   const handleCancelEdit = () => {
-    setEditingItem(null); // Clear the editing state
+    setEditingItem(null);
   };
 
   const handleItemUpdated = () => {
     fetchItems();
-    setEditingItem(null); // Clear the editing state after item is updated
-    setCurrentPage(1); // Refresh the list after update
+    setEditingItem(null);
+    setCurrentPage(1);
   };
 
   const handleDeleteItem = () => {
-    fetchItems(); // Refetch items after deletion
-    setCurrentPage(1); // Refresh the list after deletion
+    fetchItems();
+    setCurrentPage(1);
   };
 
   return (
     <div>
       <h2>Items</h2>
-      <CreateItem onItemCreated={fetchItems} />
-      {editingItem ? (
+
+      {showCreateForm && (
+        <CreateItem
+          onItemCreated={() => {
+            fetchItems();
+            setShowCreateForm(false);
+          }}
+        />
+      )}
+
+      {editingItem && (
         <EditItem
           item={editingItem}
           onUpdate={handleItemUpdated}
           onCancel={handleCancelEdit}
         />
-      ) : loading ? (
-        <div>Loading...</div>
-      ) : items.length === 0 ? (
-        <div>No items available.</div>
-      ) : (
-        <>
-          <ul>
-            {items.map((item) => (
-              <li key={item._id}>
-                <div>Name: {item.name}</div>
-                <div>Description: {item.description}</div>
-                <div>Price: {item.price}</div>
-                <button onClick={() => handleEditItem(item)}>Edit</button>
-                <DeleteItem itemId={item._id} onDelete={handleDeleteItem} />
-              </li>
-            ))}
-          </ul>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            totalItems={totalItems}
-            onNextPage={handleNextPage}
-            onPrevPage={handlePrevPage}
-          />
-        </>
+      )}
+
+      {!showCreateForm && !editingItem && (
+        <div>
+          <button onClick={() => setShowCreateForm(true)}>
+            Show Create Form
+          </button>
+
+          {loading ? (
+            <div>Loading...</div>
+          ) : items.length === 0 ? (
+            <div>No items available.</div>
+          ) : (
+            <div>
+              <ul>
+                {items.map((item) => (
+                  <ItemComponent
+                    key={item._id}
+                    item={item}
+                    onEdit={handleEditItem}
+                    onDelete={handleDeleteItem}
+                  />
+                ))}
+              </ul>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                onNextPage={handleNextPage}
+                onPrevPage={handlePrevPage}
+              />
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

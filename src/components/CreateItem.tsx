@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Item } from "../models/Item"; // Import the Item interface
+import { Item } from "../models/Item";
 
 interface CreateItemProps {
   onItemCreated: () => void;
 }
-
 
 const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
   const [name, setName] = useState<string>("");
@@ -24,7 +23,6 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
         price,
       };
       await axios.post<Item>("http://localhost:8000/v1/items/", newItem);
-      // Reset form fields after successful submission
       onItemCreated();
       setName("");
       setDescription("");
@@ -36,6 +34,14 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCancel = () => {
+    // Reset form fields and cancel item creation
+    setName("");
+    setDescription("");
+    setPrice(0);
+    onItemCreated(); // Call the onItemCreated callback to indicate cancelation
   };
 
   return (
@@ -72,9 +78,14 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
             required
           />
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating..." : "Create"}
-        </button>
+        <div>
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating..." : "Create"}
+          </button>
+          <button type="button" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
