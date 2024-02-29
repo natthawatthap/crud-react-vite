@@ -1,6 +1,9 @@
+// CreateItem.tsx
+
 import React, { useState } from "react";
 import axios from "axios";
 import { Item } from "../models/Item";
+import "./CreateItem.css"; // Import CSS file for styling
 
 interface CreateItemProps {
   onItemCreated: () => void;
@@ -45,10 +48,10 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
   };
 
   return (
-    <div>
+    <div className="create-item-container">
       <h2>Create Item</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label htmlFor="name">Name:</label>
           <input
             type="text"
@@ -58,7 +61,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="description">Description:</label>
           <input
             type="text"
@@ -68,7 +71,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="price">Price:</label>
           <input
             type="number"
@@ -78,7 +81,7 @@ const CreateItem: React.FC<CreateItemProps> = ({ onItemCreated }) => {
             required
           />
         </div>
-        <div>
+        <div className="button-group">
           <button type="submit" disabled={loading}>
             {loading ? "Creating..." : "Create"}
           </button>

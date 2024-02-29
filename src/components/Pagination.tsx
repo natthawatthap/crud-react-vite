@@ -18,15 +18,14 @@ const Pagination: React.FC<PaginationProps> = ({
   return (
     <div>
       <button onClick={onPrevPage} disabled={currentPage === 1}>
-        Previous Page
-      </button>
-
-      <button onClick={onNextPage} disabled={currentPage === totalPages}>
-        Next Page
+        {"<"}
       </button>
       <span>
-        Page {currentPage} of {totalPages}, Total Items: {totalItems}
+        Page {currentPage} of {totalPages}, Total: {totalItems}
       </span>
+      <button onClick={onNextPage} disabled={currentPage === totalPages}>
+        {">"}
+      </button>
     </div>
   );
 };

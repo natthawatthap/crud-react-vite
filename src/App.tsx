@@ -4,11 +4,10 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import ItemList from "./components/ItemList";
 
-
 function App() {
   return (
-    <>
-      <div>
+    <div className="container">
+      <div className="logo-container">
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -17,14 +16,17 @@ function App() {
         </a>
       </div>
 
-      <div className="card">
+      <div className="list-container">
+        <div className="card">
       
-        <ItemList />
+          <ItemList />
+        </div>
       </div>
+      
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-    </>
+    </div>
   );
 }
 

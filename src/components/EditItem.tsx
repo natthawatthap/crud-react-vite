@@ -25,7 +25,10 @@ const EditItem: React.FC<EditItemProps> = ({ item, onUpdate, onCancel }) => {
         description,
         price,
       };
-      await axios.put<Item>(`http://localhost:8000/v1/items/${item._id}`, updatedItem);
+      await axios.put<Item>(
+        `http://localhost:8000/v1/items/${item._id}`,
+        updatedItem
+      );
       onUpdate(); // Call the function to refetch items
       alert("Item updated successfully!");
     } catch (error) {
@@ -38,10 +41,10 @@ const EditItem: React.FC<EditItemProps> = ({ item, onUpdate, onCancel }) => {
 
   return (
     <div>
-      <h3>Edit Item</h3>
+      <h2>Edit Item</h2>
       {error && <div>{error}</div>}
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="form-group">
           <label htmlFor="name">Name:</label>
           <input
             type="text"
@@ -51,7 +54,7 @@ const EditItem: React.FC<EditItemProps> = ({ item, onUpdate, onCancel }) => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="description">Description:</label>
           <input
             type="text"
@@ -61,7 +64,7 @@ const EditItem: React.FC<EditItemProps> = ({ item, onUpdate, onCancel }) => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="price">Price:</label>
           <input
             type="number"
@@ -71,10 +74,14 @@ const EditItem: React.FC<EditItemProps> = ({ item, onUpdate, onCancel }) => {
             required
           />
         </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Updating..." : "Update"}
-        </button>
-        <button type="button" onClick={onCancel}>Cancel</button>
+        <div className="button-group">
+          <button type="submit" disabled={loading}>
+            {loading ? "Updating..." : "Update"}
+          </button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );

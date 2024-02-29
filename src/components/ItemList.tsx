@@ -91,9 +91,7 @@ const ItemList: React.FC = () => {
 
       {!showCreateForm && !editingItem && (
         <div>
-          <button onClick={() => setShowCreateForm(true)}>
-            Show Create Form
-          </button>
+          <button onClick={() => setShowCreateForm(true)}>Create Item</button>
 
           {loading ? (
             <div>Loading...</div>
@@ -101,16 +99,15 @@ const ItemList: React.FC = () => {
             <div>No items available.</div>
           ) : (
             <div>
-              <ul>
-                {items.map((item) => (
-                  <ItemComponent
-                    key={item._id}
-                    item={item}
-                    onEdit={handleEditItem}
-                    onDelete={handleDeleteItem}
-                  />
-                ))}
-              </ul>
+              {items.map((item) => (
+                <ItemComponent
+                  key={item._id}
+                  item={item}
+                  onEdit={handleEditItem}
+                  onDelete={handleDeleteItem}
+                />
+              ))}
+
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
